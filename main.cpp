@@ -107,16 +107,21 @@ int main() {
         return 1;
     }
 
-    retVal = recv(clientSock, szResponse, 255, 0); //получаем ответ от сервера(приходит вся информация с сервера)
+    while (1) {
+        for (int i = 0; i < 255; ++i)
+        {
+            szResponse[i] = 0;
+        }
+        retVal = recv(clientSock, szResponse, 255, 0); //получаем ответ от сервера(приходит вся информация с сервера)
 
-    if(retVal == SOCKET_ERROR)
-    {
-        printf("Unable to recv\n");
-        WSACleanup();
-        return 1;
+        if (retVal == SOCKET_ERROR) {
+            printf("Unable to recv\n");
+            WSACleanup();
+            return 1;
+        }
+
+        printf("Got the response from server\n%s\n", szResponse);
     }
-
-    printf("Got the response from server\n%s\n",szResponse);
 
     closesocket(clientSock);
     WSACleanup(); //отключились и всё почистили
